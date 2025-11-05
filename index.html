@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="sb32kzC2tEfm4T_fwavBJoKB7dMe_RsrOQj3XrR7Ivk" />
+    <title>鬥地主規則詳解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            margin-bottom: 25px;
+        }
+
+        /* CTA 按鈕樣式 */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 25%, #ff4757 50%, #ff3838 75%, #ff6b6b 100%);
+            background-size: 300% 300%;
+            color: white;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 18px 40px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.6);
+            animation-duration: 1s;
+        }
+
+        .cta-button:active {
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #4a5568;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #764ba2;
+        }
+
+        h3 {
+            color: #2d3748;
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            padding-left: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .game-info {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .players {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .player-card {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .player-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .card-hierarchy {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 45px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .arrow {
+            font-size: 1.2rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .card-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .card-type {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .card-type:hover {
+            background: #fed7d7;
+            transform: translateX(5px);
+        }
+
+        .card-type strong {
+            color: #c53030;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .score-example {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid #fed7aa;
+        }
+
+        .highlight {
+            background: #fef5e7;
+            color: #744210;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #fff2cd;
+            border: 1px solid #fcd34d;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .four-player-diff {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .diff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .diff-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .diff-item strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #fbbf24;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .cards {
+                justify-content: center;
+            }
+
+            .cta-button {
+                font-size: 1rem;
+                padding: 15px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🃏 鬥地主規則詳解</h1>
+            <div class="subtitle">中國經典紙牌遊戲完全指南</div>
+            
+            <!-- 娛樂城推薦按鈕 -->
+            <div style="margin-top: 25px;">
+                <a href="https://dupig03.com/2024%e6%9c%80%e6%96%b0%e5%a8%9b%e6%a8%82%e5%9f%8e%e6%8e%a8%e8%96%a6%e5%90%8d%e5%96%ae%e5%a4%a7%e5%85%ac%e9%96%8b10%e5%a4%a7%e5%a8%9b%e6%a8%82%e5%9f%8e%e9%96%8b%e7%ae%b1%e5%af%a6%e6%b8%ac%e7%8e%a9/" 
+                   target="_blank" 
+                   class="cta-button">
+                    🎰 挑選一間娛樂城玩鬥地主 🃏
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('overview')">遊戲概述</button>
+            <button class="nav-tab" onclick="showSection('cards')">牌具與牌力</button>
+            <button class="nav-tab" onclick="showSection('bidding')">叫牌規則</button>
+            <button class="nav-tab" onclick="showSection('playing')">出牌規則</button>
+            <button class="nav-tab" onclick="showSection('scoring')">計分方式</button>
+            <button class="nav-tab" onclick="showSection('fourplayer')">四人玩法</button>
+        </div>
+
+        <div class="content">
+            <div id="overview" class="section active">
+                <h2>🎯 遊戲概述</h2>
+                <div class="game-info">
+                    <p><strong>鬥地主</strong>是一款起源於中國湖北的紙牌遊戲，如今不僅在全國流行，更因為網路平台而廣為人知。這個遊戲通常由三名玩家進行（部分地區也有四人玩法）。</p>
+                </div>
+
+                <h3>核心對抗形式：一對二</h3>
+                <div class="players">
+                    <div class="player-card" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                        <h4>👑 地主</h4>
+                        <p>單獨作戰<br>目標：最先把手牌出完</p>
+                    </div>
+                    <div class="player-card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <h4>🤝 農民陣營</h4>
+                        <p>兩位玩家臨時同盟<br>只要其中一人先打完牌就獲勝</p>
+                    </div>
+                </div>
+
+                <div class="warning">
+                    <strong>💡 重要提醒：</strong>農民陣營共享勝敗，因此最好互相協作，避免內耗。
+                </div>
+            </div>
+
+            <div id="cards" class="section">
+                <h2>🎴 牌具與牌力</h2>
+                
+                <h3>牌具組成</h3>
+                <p>三人局使用一副標準 <span class="highlight">54 張撲克牌</span>，包含兩張大小王。每位玩家分得 17 張牌，剩下 3 張作為底牌，最後由地主收入。</p>
+
+                <h3>牌力排序</h3>
+                <div class="card-hierarchy">
+                    <div class="cards">
+                        <div class="card" style="background: #ff6b6b; color: white;">大王</div>
+                        <span class="arrow">＞</span>
+                        <div class="card" style="background: #4ecdc4; color: white;">小王</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">2</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">A</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">K</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">Q</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">J</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">10</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">9</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">8</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">7</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">6</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">5</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">4</div>
+                        <span class="arrow">＞</span>
+                        <div class="card">3</div>
+                    </div>
+                </div>
+
+                <div class="warning">
+                    <strong>🔍 注意：</strong>花色不影響大小，僅比較點數。
+                </div>
+
+                <h3>發牌流程</h3>
+                <p>傳統上有「抓牌」與「發牌」兩種流程，實際遊戲多採用<strong>莊家洗牌發牌</strong>，速度較快且能避免遺漏底牌。</p>
+            </div>
+
+            <div id="bidding" class="section">
+                <h2>📢 叫牌規則</h2>
+                
+                <h3>叫分系統</h3>
+                <div class="game-info">
+                    <p>地主的身份透過「<strong>叫分</strong>」決定，分數分為 <span class="highlight">1 分、2 分、3 分</span>。</p>
+                </div>
+
+                <h3>叫牌流程</h3>
+                <ol style="background: #f7fafc; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <li style="margin: 10px 0;"><strong>優先權：</strong>發到翻明牌的玩家優先叫分</li>
+                    <li style="margin: 10px 0;"><strong>選擇：</strong>可選擇 Pass（不叫）或報更高分</li>
+                    <li style="margin: 10px 0;"><strong>重新發牌：</strong>若三人皆不叫，則需重新發牌</li>
+                    <li style="margin: 10px 0;"><strong>結束條件：</strong>當有人報 3 分或連續兩人放棄</li>
+                    <li style="margin: 10px 0;"><strong>地主確定：</strong>最後叫得最高者成為地主並獲得底牌</li>
+                </ol>
+
+                <div class="warning">
+                    <strong>👀 透明度：</strong>在三人局中，地主需將底牌公開給兩位農民查看，這與四人玩法不同。
+                </div>
+            </div>
+
+            <div id="playing" class="section">
+                <h2>🎮 出牌規則</h2>
+                
+                <h3>基本規則</h3>
+                <div class="game-info">
+                    <p>地主首先出牌，可以出單張或合法組合。後續玩家需出<strong>相同牌型、張數更大</strong>的牌，或選擇 Pass。</p>
+                    <p>若連續兩人不出，則由最後成功出牌的玩家重新領先出牌。</p>
+                </div>
+
+                <h3>特殊牌型</h3>
+                <div class="players">
+                    <div class="player-card" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                        <h4>🚀 火箭</h4>
+                        <p>兩張大小王<br>能壓制所有牌型</p>
+                    </div>
+                    <div class="player-card" style="background: linear-gradient(135deg, #fecfef 0%, #ff9a9e 100%);">
+                        <h4>💥 炸彈</h4>
+                        <p>四張相同點數的牌<br>僅次於火箭</p>
+                    </div>
+                </div>
+
+                <h3>合法牌型一覽（共 13 種）</h3>
+                <div class="card-types">
+                    <div class="card-type">
+                        <strong>單張</strong>從 3 至大王
+                    </div>
+                    <div class="card-type">
+                        <strong>一對</strong>兩張相同點數
+                    </div>
+                    <div class="card-type">
+                        <strong>三張</strong>三張相同點數
+                    </div>
+                    <div class="card-type">
+                        <strong>三帶一</strong>三張相同加任意單牌
+                    </div>
+                    <div class="card-type">
+                        <strong>三帶一對</strong>三張相同加一對牌
+                    </div>
+                    <div class="card-type">
+                        <strong>順子</strong>至少五張連續單張（3–A）
+                    </div>
+                    <div class="card-type">
+                        <strong>連對</strong>至少三個連續的對子（3–A）
+                    </div>
+                    <div class="card-type">
+                        <strong>三順</strong>兩組以上連續三張（3–A）
+                    </div>
+                    <div class="card-type">
+                        <strong>三順帶單</strong>每個三張都附帶一張單牌
+                    </div>
+                    <div class="card-type">
+                        <strong>三順帶對</strong>每個三張都附帶一對
+                    </div>
+                    <div class="card-type">
+                        <strong>炸彈</strong>四張相同點數
+                    </div>
+                    <div class="card-type">
+                        <strong>火箭</strong>大小王各一張
+                    </div>
+                    <div class="card-type">
+                        <strong>四帶二</strong>四張相同加兩張單牌或兩對
+                    </div>
+                </div>
+
+                <div class="warning">
+                    <strong>⚠️ 特別提醒：</strong>這輪 Pass 不代表放棄下次出牌機會。
+                </div>
+            </div>
+
+            <div id="scoring" class="section">
+                <h2>💰 計分方式</h2>
+                
+                <h3>基本勝負</h3>
+                <div class="players">
+                    <div class="player-card" style="background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);">
+                        <h4>🏆 地主勝利</h4>
+                        <p>地主先出完<br>農民各支付定約分數</p>
+                    </div>
+                    <div class="player-card" style="background: linear-gradient(135deg, #ff8a80 0%, #ffcc80 100%);">
+                        <h4>🎯 農民勝利</h4>
+                        <p>農民陣營有人先出完<br>地主支付定約分數給兩位農民</p>
+                    </div>
+                </div>
+
+                <h3>加倍規則</h3>
+                <div class="score-example">
+                    <h4>🔥 每出現一次炸彈或火箭，分數翻倍</h4>
+                    <p><strong>計算例子：</strong></p>
+                    <p>地主叫 3 分並最終獲勝，本局共出現 2 炸 1 火箭</p>
+                    <p>計算：3 分 × 2³ = 3 × 8 = 24 分</p>
+                    <p><span class="highlight">地主將贏得 24 分 × 2 人 = 48 分</span></p>
+                </div>
+            </div>
+
+            <div id="fourplayer" class="section">
+                <h2>👥 四人鬥地主</h2>
+                
+                <div class="four-player-diff">
+                    <p>在浙江、江蘇、上海等地，四人版本更為流行。</p>
+                </div>
+
+                <h3>規則特色</h3>
+                <div class="diff-grid">
+                    <div class="diff-item" style="background: #fff2cd;">
+                        <strong>🃏 牌具</strong>
+                        使用兩副牌（108 張）
+                    </div>
+                    <div class="diff-item" style="background: #e6fffa;">
+                        <strong>📊 手牌</strong>
+                        每人 25 張，地主 33 張
+                    </div>
+                    <div class="diff-item" style="background: #fed7d7;">
+                        <strong>🔒 底牌</strong>
+                        底牌不公開
+                    </div>
+                </div>
+
+                <h3>牌型差異</h3>
+                <div class="card-types">
+                    <div class="card-type" style="background: #fff5f5; border-left-color: #f56565;">
+                        <strong>❌ 移除牌型</strong>三帶一、三順帶單、四帶二不存在
+                    </div>
+                    <div class="card-type" style="background: #f0fff4; border-left-color: #48bb78;">
+                        <strong>💥 炸彈升級</strong>可由四張以上相同點數組成，張數越多越大
+                    </div>
+                    <div class="card-type" style="background: #f7fafc; border-left-color: #4299e1;">
+                        <strong>🚀 火箭升級</strong>需由四張大小王構成
+                    </div>
+                    <div class="card-type" style="background: #fffaf0; border-left-color: #ed8936;">
+                        <strong>📈 翻倍條件</strong>僅限火箭或六張及以上炸彈
+                    </div>
+                </div>
+
+                <div class="warning">
+                    <strong>💡 重要：</strong>四張、五張炸彈在四人玩法中不翻倍。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // 隱藏所有區段
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 移除所有標籤的 active 狀態
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // 顯示選中的區段
+            document.getElementById(sectionId).classList.add('active');
+
+            // 添加對應標籤的 active 狀態
+            event.target.classList.add('active');
+        }
+
+        // 添加一些互動效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 為卡片添加點擊效果
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-2px)';
+                    }, 200);
+                });
+            });
+
+            // 平滑滾動到頂部當切換頁籤時
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
